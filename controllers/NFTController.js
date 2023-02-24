@@ -10,19 +10,21 @@ exports.generate = [
         try {
             const diceResults = req.body.diceResults
             const html = nft.template({diceResults: diceResults})
-            let image = await nodeHtmlToImage({
-                encoding: 'base64',
-                type: 'png',
-                html: html
-              })
-                .then((img) => {
-                    return img
-                })
-            res.set('Content-Type', 'image/png');
-            res.send(Buffer.from(image, 'base64'));
+            // const browser = await puppeteer.launch();
+            // const page = await browser.newPage();
+            // await page.setViewport({
+            //     width: 960,
+            //     height: 760,
+            //     deviceScaleFactor: 1,
+            // });            
+            // await page.setContent(html);
+            // let image = await page.screenshot({path: "./example.png", encoding: "base64"});
+            // console.log(image)
+            // await browser.close();
+            res.set('Content-Type', 'text/html');
+            res.send(Buffer.from(html));
         }
         catch (err) {
-            console.log(err);
 			return apiResponse.ErrorResponse(res, err);
 		}
     }
