@@ -97,7 +97,7 @@ const processFurther = (opts, cb) => {
     fs.writeFileSync(tempFilePath, image);
 
     async.waterfall([
-        (callback) => {
+        async (callback) => {
             console.log("step 1")
             var data = JSON.stringify({
                 query: `mutation CreateFileUploadUrl($name: String!, $description: String, $options: CreateFileOptionsInput!) {
@@ -132,7 +132,7 @@ const processFurther = (opts, cb) => {
                 });
         },
         
-        (uploadData, callback) => {
+        async (uploadData, callback) => {
             console.log("step 2")
             try {
                 const image = fs.readFileSync(tempFilePath);
@@ -149,7 +149,7 @@ const processFurther = (opts, cb) => {
                 callback(null, err)
             }
         },
-        (fileId, callback) => {
+        async (fileId, callback) => {
             console.log("step 3")
             var data = JSON.stringify({
                 query: `mutation CreateModel($setId: ID!, $data: NFTModelCreateInput!) {
