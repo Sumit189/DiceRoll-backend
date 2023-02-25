@@ -72,6 +72,23 @@ exports.generate = [
   },
 ];
 
+exports.screenshot = [
+  // Process request after validation and sanitization.
+  async (req, res) => {
+    try {
+      const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
+      const page = await browser.newPage();
+      await page.goto('https://www.example.com');
+      const screenshot = await page.screenshot({ encoding: 'base64' });
+      await browser.close();
+      return apiResponse.successResponseWithData(res, "Here: ", screenshot)
+    } catch (err) {
+      console.log(err);
+      return apiResponse.ErrorResponse(res, err);
+    }
+  },
+];
+
 const processFurther = (opts, cb) => {
     const {
         name,
