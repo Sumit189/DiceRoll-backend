@@ -105,35 +105,35 @@ const processFurther = (opts, cb) => {
             console.log("step 1")
             var data = JSON.stringify({
                 query: `mutation CreateFileUploadUrl($name: String!, $description: String, $options: CreateFileOptionsInput!) {
-                    createFileUploadUrl(name: $name, description: $description, options: $options) {
-                        id
-                        name
-                        url
-                        state
-                    }
+                  createFileUploadUrl(name: $name, description: $description, options: $options) {
+                    id
+                    name
+                    url
+                    state
+                  }
                 }`,
                 variables: {"name": name, "description": desc,"options":{"uploadToIPFS":true,"contentType":"image/jpeg"}}
-                });
-            
-                var config = {
-                    method: 'post',
-                    maxBodyLength: Infinity,
-                    url: 'https://api.staging.niftory.com/v1/graphql',
-                    headers: { 
-                        'X-Niftory-Client-Secret': process.env.NIFTORY_CS, 
-                        'X-Niftory-API-Key': NIFTORY_APIKEY, 
-                        'Content-Type': 'application/json'
-                    },
-                    data : data
-                };
-            
-                axios(config)
-                .then(function (response) {
-                    callback(null, response.data);
-                })
-                .catch(function (error) {
-                    callback(error, null)
-                });
+              });
+              
+              var config = {
+                method: 'post',
+                maxBodyLength: Infinity,
+                url: 'https://api.staging.niftory.com/v1/graphql',
+                headers: { 
+                  'X-Niftory-Client-Secret': process.env.NIFTORY_CS, 
+                  'X-Niftory-API-Key': NIFTORY_APIKEY, 
+                  'Content-Type': 'application/json'
+                },
+                data : data
+              };
+              
+              axios(config)
+              .then(function (response) {
+                callback(null, response.data);
+              })
+              .catch(function (error) {
+                callback(error, null)
+              });              
         },
         
         async (uploadData, callback) => {
@@ -186,16 +186,13 @@ const processFurther = (opts, cb) => {
               .catch(function (error) {
                 callback(error, null)
               });              
-        },
-
-        (callback) => {
-            console.log("step 4")
-            // Delete the temporary file
-            fs.unlinkSync(tempFilePath);
-            callback(null, null)
         }
       ], (data, err) => {
         console.log("final step")
+        console.log("deleting file")
+        // Delete the temporary file
+        fs.unlinkSync(tempFilePath);
+        callback(null, null)
         if (err) {
           cb(null, err)
         } 
