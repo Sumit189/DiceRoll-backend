@@ -75,10 +75,11 @@ exports.generate = [
 exports.screenshot = [
   // Process request after validation and sanitization.
   async (req, res) => {
+    const url = req.body.url
     try {
       const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
       const page = await browser.newPage();
-      await page.goto('https://www.example.com');
+      await page.goto(url);
       const screenshot = await page.screenshot({ encoding: 'base64' });
       await browser.close();
       return apiResponse.successResponseWithData(res, "Here: ", screenshot)
