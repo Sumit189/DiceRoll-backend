@@ -78,7 +78,7 @@ exports.screenshot = [
   async (req, res) => {
     const url = req.body.url
     try {
-      let browser = await chromium.puppeteer.launch({
+      let browser = chromium.puppeteer.launch({
         args: chromium.args,
         defaultViewport: chromium.defaultViewport,
         executablePath: await chromium.executablePath,
@@ -87,7 +87,7 @@ exports.screenshot = [
       });
       console.log("here");
       //let page = await browser.newPage();
-      page.goto(url);
+      //page.goto(url);
       console.log("here2");
       //const screenshot = page.screenshot({ encoding: 'base64' });
       return apiResponse.successResponseWithData(res, "Here: ", "screenshot")
