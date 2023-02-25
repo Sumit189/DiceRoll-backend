@@ -14,7 +14,7 @@ exports.generate = [
     try {
       const diceResults = req.body.diceResults;
       nft.template({ diceResults: diceResults }, (data, err) => {
-        console.log(data)
+        console.log(Object.keys(data))
         if (err) {
             apiResponse.ErrorResponse(res, err)
         }
