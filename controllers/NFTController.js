@@ -16,7 +16,7 @@ exports.generate = [
       nft.template({ diceResults: diceResults }, (data, err) => {
         console.log(data)
         if (err) {
-            res.negotiate(err)
+            apiResponse.ErrorResponse(res, err)
         }
         const formData = new FormData();
         formData.append(
@@ -50,7 +50,7 @@ exports.generate = [
               if (response.data) {
                 processFurther({image: response.data, name: data.name, desc: data.desc, diceResults: diceResults}, (data, err) => {
                     if (err) {
-                        res.negotiate(err)
+                        apiResponse.ErrorResponse(res, err)
                     }
                     apiResponse.successResponse(res, "Created NFT");
                 });
@@ -132,7 +132,7 @@ const processFurther = (opts, cb) => {
                     callback(null, response.data);
                 })
                 .catch(function (error) {
-                    callback(err, null)
+                    callback(error, null)
                 });
         },
         
@@ -148,9 +148,9 @@ const processFurther = (opts, cb) => {
                     'Content-Type': 'image/jpeg'
                     }
                 });
-                callback({fileId: uploadData.fileId})
+                callback(null, {fileId: uploadData.fileId})
             } catch (error) {
-                callback(null, err)
+                callback(error, null)
             }
         },
         async (fileId, callback) => {
@@ -184,7 +184,7 @@ const processFurther = (opts, cb) => {
                 callback(null, null)
               })
               .catch(function (error) {
-                callback(null, err)
+                callback(error, null)
               });              
         },
 
