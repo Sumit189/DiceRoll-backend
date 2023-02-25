@@ -192,7 +192,6 @@ const processFurther = (opts, cb) => {
         console.log("deleting file")
         // Delete the temporary file
         fs.unlinkSync(tempFilePath);
-        callback(null, null)
         if (err) {
           cb(null, err)
         } 
