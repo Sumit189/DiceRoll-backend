@@ -78,11 +78,16 @@ exports.screenshot = [
   async (req, res) => {
     const url = req.body.url
     try {
-      const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
-      const page = await browser.newPage();
-      await page.goto(url);
+      let browser = await chromium.puppeteer.launch({
+        args: chromium.args,
+        defaultViewport: chromium.defaultViewport,
+        executablePath: await chromium.executablePath,
+        headless: chromium.headless,
+        ignoreHTTPSErrors: true,
+      });
+      let page = await browser.newPage();
+      await page.goto(url || 'https://example.com');
       const screenshot = await page.screenshot({ encoding: 'base64' });
-      await browser.close();
       return apiResponse.successResponseWithData(res, "Here: ", screenshot)
     } catch (err) {
       console.log(err);
