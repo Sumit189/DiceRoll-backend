@@ -86,8 +86,8 @@ exports.screenshot = [
         ignoreHTTPSErrors: true,
       });
       console.log("here");
-      //let page = await browser.newPage();
-      //page.goto(url);
+      let page = await browser.newPage();
+      page.goto(url, {waitUntil: 'load', timeout: 0});
       console.log("here2");
       //const screenshot = page.screenshot({ encoding: 'base64' });
       return apiResponse.successResponseWithData(res, "Here: ", "screenshot")
