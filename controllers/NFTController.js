@@ -7,6 +7,7 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const async = require('async')
+const puppeteer = require('puppeteer');
 
 exports.generate = [
   // Process request after validation and sanitization.
