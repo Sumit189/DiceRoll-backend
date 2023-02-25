@@ -84,6 +84,7 @@ exports.screenshot = [
         executablePath: await chromium.executablePath,
         headless: chromium.headless,
         ignoreHTTPSErrors: true,
+        timeout: 0, // Set to 0 to disable timeout
       });
       console.log("here");
       // let page = await browser.newPage();
