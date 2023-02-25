@@ -1,4 +1,4 @@
-exports.template = (opts) => {
+exports.template = (opts, cb) => {
   const {
     diceResults
   } = opts;
@@ -172,8 +172,10 @@ exports.template = (opts) => {
 
 
 
-  
-	return `<!DOCTYPE html>
+  let response = {};
+  response['name'] = cardTitle
+  response['desc'] = powerTitle
+	response['html'] = `<!DOCTYPE html>
 <html lang="en" >
 <head>
   <meta charset="UTF-8">
@@ -430,5 +432,6 @@ body .card .tiny-txt {
 </body>
 </html>
   `
+  cb(null, response)
 }
 
