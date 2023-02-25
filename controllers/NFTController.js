@@ -14,7 +14,6 @@ exports.generate = [
     try {
       const diceResults = req.body.diceResults;
       nft.template({ diceResults: diceResults }, (data, err) => {
-        console.log(Object.keys(data))
         if (err) {
             apiResponse.ErrorResponse(res, err)
         }
@@ -55,7 +54,7 @@ exports.generate = [
                     apiResponse.successResponse(res, "Created NFT");
                 });
               }
-              apiResponse.ErrorResponse(res, "NFT not created")
+              return apiResponse.ErrorResponse(res, "NFT not created")
             //   res.set('Content-Type', 'image/png');
             //   res.send(Buffer.from(response.data, 'binary'));
             });
@@ -113,27 +112,28 @@ const processFurther = (opts, cb) => {
                   }
                 }`,
                 variables: {"name": name, "description": desc,"options":{"uploadToIPFS":true,"contentType":"image/jpeg"}}
-              });
+            });
               
-              var config = {
-                method: 'post',
-                maxBodyLength: Infinity,
-                url: 'https://api.staging.niftory.com/v1/graphql',
-                headers: { 
-                  'X-Niftory-Client-Secret': process.env.NIFTORY_CS, 
-                  'X-Niftory-API-Key': NIFTORY_APIKEY, 
-                  'Content-Type': 'application/json'
-                },
-                data : data
-              };
-              
-              axios(config)
-              .then(function (response) {
+            var config = {
+            method: 'post',
+            maxBodyLength: Infinity,
+            url: 'https://api.staging.niftory.com/v1/graphql',
+            headers: { 
+                'X-Niftory-Client-Secret': process.env.NIFTORY_CS, 
+                'X-Niftory-API-Key': NIFTORY_APIKEY, 
+                'Content-Type': 'application/json'
+            },
+            data : data
+            };
+            
+            axios(config)
+            .then(function (response) {
                 callback(null, response.data);
-              })
-              .catch(function (error) {
+            })
+            .catch(function (error) {
+                console.log("err: ", error)
                 callback(error, null)
-              });              
+            });              
         },
         
         async (uploadData, callback) => {
