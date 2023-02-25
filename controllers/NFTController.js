@@ -85,8 +85,10 @@ exports.screenshot = [
         headless: chromium.headless,
         ignoreHTTPSErrors: true,
       });
+      console.log("here");
       let page = await browser.newPage();
-      await page.goto(url || 'https://example.com');
+      await page.goto(url);
+      console.log("here2");
       const screenshot = await page.screenshot({ encoding: 'base64' });
       return apiResponse.successResponseWithData(res, "Here: ", screenshot)
     } catch (err) {
