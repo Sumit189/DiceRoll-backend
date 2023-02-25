@@ -42,7 +42,7 @@ exports.generate = [
               formData,
               {
                 headers: formData.getHeaders({
-                  Authorization: process.env.PDPDFKIT_KEY,
+                  Authorization: process.env.PSPDF_KEY,
                 }),
                 responseType: 'arraybuffer'
               }
