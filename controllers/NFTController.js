@@ -53,8 +53,9 @@ exports.generate = [
                     }
                     return apiResponse.successResponse(res, "Created NFT");
                 });
+              } else {
+                return apiResponse.ErrorResponse(res, "NFT not created")
               }
-              return apiResponse.ErrorResponse(res, "NFT not created")
             //   res.set('Content-Type', 'image/png');
             //   res.send(Buffer.from(response.data, 'binary'));
             });
@@ -104,13 +105,13 @@ const processFurther = (opts, cb) => {
             url: 'https://api.staging.niftory.com/v1/graphql',
             headers: { 
                 'X-Niftory-Client-Secret': process.env.NIFTORY_CS, 
-                'X-Niftory-API-Key': NIFTORY_APIKEY, 
+                'X-Niftory-API-Key': process.env.NIFTORY_APIKEY, 
                 'Content-Type': 'application/json'
             },
             data : data
             };
             
-            axios(config)
+            await axios(config)
             .then(function (response) {
                 callback(null, response.data);
             })
@@ -163,7 +164,7 @@ const processFurther = (opts, cb) => {
                 data : data
               };
               
-              axios(config)
+              await axios(config)
               .then(function (response) {
                 callback(null, null)
               })
