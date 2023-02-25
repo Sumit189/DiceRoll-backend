@@ -85,7 +85,7 @@ const processFurther = (opts, cb) => {
     fs.writeFileSync(tempFilePath, image);
 
     async.waterfall([
-        async (callback) => {
+        (callback) => {
             console.log("step 1")
             var data = JSON.stringify({
                 query: `mutation CreateFileUploadUrl($name: String!, $description: String, $options: CreateFileOptionsInput!) {
@@ -111,9 +111,9 @@ const processFurther = (opts, cb) => {
             data : data
             };
             
-            await axios(config)
+            axios(config)
             .then(function (response) {
-                callback(null, response.data);
+                callback(null, response.data?.data?.createFileUploadUrl);
             })
             .catch(function (error) {
                 console.log("err: ", error)
@@ -121,11 +121,11 @@ const processFurther = (opts, cb) => {
             });              
         },
         
-        async (uploadData, callback) => {
+        (uploadData, callback) => {
             console.log("step 2")
             try {
                 const image = fs.readFileSync(tempFilePath);
-                const response = await axios({
+                const response = axios({
                     method: 'PUT',
                     url: uploadData.url,
                     data: image,
@@ -133,12 +133,13 @@ const processFurther = (opts, cb) => {
                     'Content-Type': 'image/jpeg'
                     }
                 });
-                callback(null, {fileId: uploadData.fileId})
-            } catch (error) {
+                callback(null, {fileId: uploadData.id})
+            } catch (error) { 
+                console.log(error);
                 callback(error, null)
             }
         },
-        async (fileId, callback) => {
+        (data, callback) => {
             console.log("step 3")
             var data = JSON.stringify({
                 query: `mutation CreateModel($setId: ID!, $data: NFTModelCreateInput!) {
@@ -149,34 +150,36 @@ const processFurther = (opts, cb) => {
                       attributes
                   }
               }`,
-                variables: {"setId": process.env.NIFTORY_SETID, "data":{"title": name,"description": desc,"quantity": 1,"content":{"fileId": fileId,"posterId": fileId},"metadata":{"list": diceResults,"property":{"bag":"of","values":1,"these":"are private to your app, they don't get put on-chain"}},"attributes":{"json":"attributes","property":{"bag":"of","values":1,"these":"are private to your app, they don't get put on-chain"}}}}
-              });
+                variables: {"setId": process.env.NIFTORY_SETID,"data":{"title":name,"description":desc,"quantity":1,"content":{"fileId":data.fileId,"posterId":data.fileId},"metadata":{"dice":diceResults,"property":{"bag":"of","values":1,"these":"are private to your app, they don't get put on-chain"}},"attributes":{"json":"attributes","property":{"bag":"of","values":1,"these":"are private to your app, they don't get put on-chain"}}}}
+            });
               
-              var config = {
-                method: 'post',
-              maxBodyLength: Infinity,
-                url: 'https://api.staging.niftory.com/v1/graphql',
-                headers: { 
-                  'X-Niftory-Client-Secret': process.env.NIFTORY_CS, 
-                  'X-Niftory-API-Key': process.env.NIFTORY_APIKEY, 
-                  'Content-Type': 'application/json'
-                },
-                data : data
-              };
-              
-              await axios(config)
-              .then(function (response) {
-                callback(null, null)
-              })
-              .catch(function (error) {
-                callback(error, null)
-              });              
+            var config = {
+            method: 'post',
+            maxBodyLength: Infinity,
+            url: 'https://api.staging.niftory.com/v1/graphql',
+            headers: { 
+                'X-Niftory-Client-Secret': process.env.NIFTORY_CS, 
+                'X-Niftory-API-Key': process.env.NIFTORY_APIKEY, 
+                'Content-Type': 'application/json'
+            },
+            data : data
+            };
+            
+            axios(config)
+            .then(function (response) {
+            console.log(JSON.stringify(response.data));
+            callback(response, null)
+            })
+            .catch(function (error) {
+            console.log(error);
+            callback(null, err)
+            });                           
         }
       ], (data, err) => {
         console.log("final step")
         console.log("deleting file")
-        // Delete the temporary file
         fs.unlinkSync(tempFilePath);
+
         if (err) {
           cb(null, err)
         } 
