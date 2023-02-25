@@ -14,6 +14,10 @@ exports.generate = [
     try {
       const diceResults = req.body.diceResults;
       nft.template({ diceResults: diceResults }, (data, err) => {
+        console.log(data)
+        if (err) {
+            res.negotiate(err)
+        }
         const formData = new FormData();
         formData.append(
           "instructions",
@@ -46,7 +50,7 @@ exports.generate = [
               if (response.data) {
                 processFurther({image: response.data, name: data.name, desc: data.desc, diceResults: diceResults}, (data, err) => {
                     if (err) {
-                        res.negotiatet(err)
+                        res.negotiate(err)
                     }
                     apiResponse.successResponse(res, "Created NFT");
                 });
