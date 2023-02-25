@@ -86,11 +86,11 @@ exports.screenshot = [
         ignoreHTTPSErrors: true,
       });
       console.log("here");
-      let page = await browser.newPage();
+      //let page = await browser.newPage();
       page.goto(url);
       console.log("here2");
-      const screenshot = page.screenshot({ encoding: 'base64' });
-      return apiResponse.successResponseWithData(res, "Here: ", screenshot)
+      //const screenshot = page.screenshot({ encoding: 'base64' });
+      return apiResponse.successResponseWithData(res, "Here: ", "screenshot")
     } catch (err) {
       console.log(err);
       return apiResponse.ErrorResponse(res, err);
