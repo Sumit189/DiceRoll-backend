@@ -44,13 +44,14 @@ exports.generate = [
               }
             ).then(response => {
               if (response.data) {
-                  processFurther({image: response.data, name: data.name, desc: data.desc, diceResults: diceResults}, (filePath, err)) {
-                      if (err) {
-                          res.negotiatet(err)
-                      }
-                      apiResponse.successResponse(res, "Created NFT");
-                  }
+                processFurther({image: response.data, name: data.name, desc: data.desc, diceResults: diceResults}, (data, err) => {
+                    if (err) {
+                        res.negotiatet(err)
+                    }
+                    apiResponse.successResponse(res, "Created NFT");
+                });
               }
+              apiResponse.ErrorResponse(res, "NFT not created")
             //   res.set('Content-Type', 'image/png');
             //   res.send(Buffer.from(response.data, 'binary'));
             });
