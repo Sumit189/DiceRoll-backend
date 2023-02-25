@@ -49,9 +49,9 @@ exports.generate = [
               if (response.data) {
                 processFurther({image: response.data, name: data.name, desc: data.desc, diceResults: diceResults}, (data, err) => {
                     if (err) {
-                        apiResponse.ErrorResponse(res, err)
+                        return apiResponse.ErrorResponse(res, err)
                     }
-                    apiResponse.successResponse(res, "Created NFT");
+                    return apiResponse.successResponse(res, "Created NFT");
                 });
               }
               return apiResponse.ErrorResponse(res, "NFT not created")
@@ -64,22 +64,6 @@ exports.generate = [
           }
         })();
       });
-      // const browser = await puppeteer.launch();
-      // const page = await browser.newPage();
-      // await page.setViewport({
-      //     width: 960,
-      //     height: 760,
-      //     deviceScaleFactor: 1,
-      // });
-      // await page.setContent(html);
-      // let image = await page.screenshot({path: "./example.png", encoding: "base64"});
-      // console.log(image)
-      // await browser.close();
-      // res.set('Content-Type', 'text/html');
-      // res.send(Buffer.from(html));
-
-    // res.contentType("text/html");
-    // res.send(html);
     } catch (err) {
       console.log(err);
       return apiResponse.ErrorResponse(res, err);
