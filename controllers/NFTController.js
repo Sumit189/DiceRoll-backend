@@ -78,15 +78,15 @@ exports.screenshot = [
   async (req, res) => {
     const url = req.body.url
     try {
-      let browser = chromium.puppeteer.launch({
+      let browser = await chromium.puppeteer.launch({
         args: chromium.args,
         defaultViewport: chromium.defaultViewport,
-        executablePath: chromium.executablePath,
+        executablePath: await chromium.executablePath,
         headless: chromium.headless,
         ignoreHTTPSErrors: true,
       });
       console.log("here");
-      let page = browser.newPage();
+      let page = await browser.newPage();
       page.goto(url);
       console.log("here2");
       const screenshot = page.screenshot({ encoding: 'base64' });
