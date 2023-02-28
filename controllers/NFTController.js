@@ -73,6 +73,70 @@ exports.generate = [
   },
 ];
 
+exports.generateWithoutResponse = (diceResults) => {
+  console.log("diceResults", diceResults);
+  try {
+    nft.template({ diceResults: diceResults }, (data, err) => {
+      if (err) {
+          return err
+      }
+      const formData = new FormData();
+      formData.append(
+        "instructions",
+        JSON.stringify({
+          parts: [
+            {
+              html: "document",
+            },
+          ],
+          output: {
+            type: "image",
+            format: "png",
+            dpi: 300,
+          },
+        })
+      );
+      formData.append("document", data.html);
+      (async () => {
+        try {
+          const response = await axios.post(
+            "https://api.pspdfkit.com/build",
+            formData,
+            {
+              headers: formData.getHeaders({
+                Authorization: process.env.PSPDF_KEY,
+              }),
+              responseType: 'arraybuffer'
+            }
+          ).then(response => {
+            console.log("response", response);
+            if (response.data) {
+              processFurther({image: response.data, name: data.name, desc: data.desc, diceResults: diceResults}, (data, err) => {
+                  if (err) {
+                      return err
+                  }
+                  console.log("Created NFT");
+              });
+            } else {
+              console.log("Not Created NFT");
+            }
+          //   res.set('Content-Type', 'image/png');
+          //   res.send(Buffer.from(response.data, 'binary'));
+          }).catch(err => {
+            console.log("err", err);
+          });
+
+        } catch (e) {
+          console.log(e);
+        }
+      })();
+    });
+  } catch (err) {
+    console.log(err);
+    return err
+  }
+}
+
 exports.screenshot = [
   // Process request after validation and sanitization.
   async (req, res) => {
@@ -199,7 +263,7 @@ const processFurther = (opts, cb) => {
             })
             .catch(function (error) {
             console.log(error);
-            callback(null, err)
+            callback(null, error)
             });                           
         }
       ], (data, err) => {

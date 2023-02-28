@@ -2,6 +2,7 @@ require("dotenv").config();
 const fcl = require("@onflow/fcl");
 const apiResponse = require("../helpers/apiResponse");
 const { authorizationFunction } = require("../helpers/authorization");
+const NFTController = require("../controllers/NFTController");
 
 const address = "0228cfaf738ed8f5"
 
@@ -81,7 +82,15 @@ const controller = {
         fcl.authorizations([authorizationFunction]),
         fcl.payer(authorizationFunction),
       ]);
-      return apiResponse.successResponse(res, result);
+      apiResponse.successResponse(res, result);
+
+      fcl.tx(result.transactionId).subscribe((tx) => {
+        if(tx?.status === 4) {
+          let dice_result = tx.events.find((e) => e.type === "A.0228cfaf738ed8f5.Diceroller.DiceRollSetResult")
+          dice_result = dice_result.data.result.map(i=>Number(i))
+          NFTController.generateWithoutResponse(dice_result)
+        }
+      })
     } catch (err) {
       console.log(err);
       return apiResponse.ErrorResponse(res, err);
