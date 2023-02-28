@@ -82,15 +82,15 @@ const controller = {
         fcl.authorizations([authorizationFunction]),
         fcl.payer(authorizationFunction),
       ]);
-      apiResponse.successResponse(res, result);
+      return apiResponse.successResponse(res, result);
 
-      fcl.tx(result.transactionId).subscribe((tx) => {
-        if(tx?.status === 4) {
-          let dice_result = tx.events.find((e) => e.type === "A.0228cfaf738ed8f5.Diceroller.DiceRollSetResult")
-          dice_result = dice_result.data.result.map(i=>Number(i))
-          NFTController.generateWithoutResponse(dice_result)
-        }
-      })
+      // fcl.tx(result.transactionId).subscribe((tx) => {
+      //   if(tx?.status === 4) {
+      //     let dice_result = tx.events.find((e) => e.type === "A.0228cfaf738ed8f5.Diceroller.DiceRollSetResult")
+      //     dice_result = dice_result.data.result.map(i=>Number(i))
+      //     NFTController.generateWithoutResponse(dice_result)
+      //   }
+      // })
     } catch (err) {
       console.log(err);
       return apiResponse.ErrorResponse(res, err);
